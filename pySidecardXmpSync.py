@@ -23,10 +23,13 @@ from pyexiftoolsettags import exiftool
 #from pyexiftool_1 import exiftool
 
 
-def is_main_file(filename, extensions = ['xmp','XMP']):
+MAIN_EXTS = ['xmp','XMP'] # Exts used to identify the file with the metadata which will be copied to the other files
+RELATED_EXTS = ['jpg','JPG','jpeg','JPEG','nef','NEF'] # Exts to identidy the files which will be replaced it's metadata with the main file
+    
+def is_main_file(filename, extensions = MAIN_EXTS):
     return any(filename.endswith(e) for e in extensions)
 
-def is_related_file(filename, mainfilename, root, extensions = ['jpg','JPG','jpeg','JPEG','nef','NEF']):
+def is_related_file(filename, mainfilename, root, extensions = RELATED_EXTS):
     return any(filename.endswith(e) and filename.startswith(mainfilename) for e in extensions)
 
 def main(path, recursive):
@@ -35,23 +38,24 @@ def main(path, recursive):
         path = '.'
     # exiftool  -P -overwrite_original_in_place -ProcessingSoftware='pyExifToolGui 0.6' -xmp:Subject="CasaVieja, Granja, Ciudad, bogota" "/Users/jaimeenrrique/Documents/workspace/pysync_sidecard_with_imagefile/20_CCSantaFe/DSC_0405.JPG"
 
-    with et:
-        actual_data = et.get_tags(["XMP:Subject"],'/Users/jaimeenrrique/Documents/workspace/pysync_sidecard_with_imagefile/20_CCSantaFe/DSC_0405.NEF.xmp')
-        print(actual_data)
+    #with et:
+    #    actual_data = et.get_tags(["XMP:Subject"],'/Users/jaimeenrrique/Documents/workspace/pysync_sidecard_with_imagefile/20_CCSantaFe/DSC_0405.NEF.xmp')
+    #    print(actual_data)
     
     #with et:
     #    actual_data = et.set_tags({"XMP:Subject":'"nature, ok1, ok2"'},'/Users/jaimeenrrique/Documents/workspace/pysync_sidecard_with_imagefile/20_CCSantaFe/DSC_0405.NEF.xmp')
     #    print(actual_data)
     
-    with et:
-        actual_data = et.set_keywords(exiftool.KW_REPLACE,["nature", "red plant", "oki1"],'/Users/jaimeenrrique/Documents/workspace/pysync_sidecard_with_imagefile/20_CCSantaFe/DSC_0405.NEF.xmp')
-        print(actual_data)
-        
+    #with et:
+    #    actual_data = et.set_keywords(exiftool.KW_REPLACE,["nature", "red plant", "oki1"],'/Users/jaimeenrrique/Documents/workspace/pysync_sidecard_with_imagefile/20_CCSantaFe/DSC_0405.NEF.xmp')
+    #    print(actual_data)
+    
+    cnt = 0
     for root, dirs, files in os.walk(path):
         print(filter(is_main_file, files))
         for filename in filter(is_main_file, files):
-            print(str(os.path.join(root, filename)))
             print(str('.....................................'))
+            print(str(os.path.join(root, filename)))
             #filefilter = is_related_file(filename, mainfilename, extensions)
             related_files = filter(lambda x: is_related_file(x, os.path.basename(filename).split('.')[0], root), files)
             print(related_files)
@@ -65,14 +69,17 @@ def main(path, recursive):
                 #print(os.path.splitext(os.path.basename(filename))[:1])
                 #print(filename.split(".")[-3])
                 print(os.path.basename(filename).split('.')[0])
-                
+                print(related_files)
                 #print(et.set_keywords(exiftool.KW_REPLACE,actual_data,'"'+str(os.path.join(root, os.path.basename(filename).split('.')[0])+".")+'"*'))
                 #print(et.set_keywords(exiftool.KW_REPLACE,actual_data,str(os.path.join(root, os.path.basename(filename).split('.')[0]))))
-                print(et.set_keywords_batch(exiftool.KW_REPLACE,actual_data, [os.path.join(root, x) for x in related_files] ) )
+                cnt = cnt + len(related_files)
+                if len(related_files) > 0 :
+                    print(et.set_keywords_batch(exiftool.KW_REPLACE,actual_data, [os.path.join(root, x) for x in related_files] ) )
+                    print(et.get_tag_batch("XMP:Subject",[os.path.join(root, x) for x in related_files]))
                 print("--------------")
-                print(et.get_tag("XMP:Subject",os.path.join(root, "DSC_0405.NEF")))
         if not recursive:
             break
+    print('modified > '+str(cnt)+' files')
     
 
 #------------------------------------------------------------------------
@@ -82,7 +89,6 @@ def main(path, recursive):
 if __name__ == '__main__':
     path  = '/Users/jaimeenrrique/Documents/workspace/pysync_sidecard_with_imagefile/20_CCSantaFe'
     recursive = False
-    exts = ['jpg','JPG','jpeg','JPEG']
     #exiftool = 'exiftool' #'/usr/local/Cellar/exiftool/10.20/bin/exiftool'
     main(path, recursive)
     
