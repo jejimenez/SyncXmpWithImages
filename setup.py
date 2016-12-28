@@ -7,5 +7,5 @@ setup(name='pysync_image_metadata',
       author='Jaime Jimenez',
       author_email='flyingcircus@example.com',
       license='MIT',
-      packages=['pysync_images_metadata'],
+      packages=['pysync_image_metadata'],
       zip_safe=False)
