@@ -1,5 +1,5 @@
 eclipse.preferences.version=1
-encoding//pyexiftoolsettags/doc/conf.py=utf-8
-encoding//pyexiftoolsettags/exiftool.py=utf-8
-encoding//pyexiftoolsettags/test/test_exiftool.py=utf-8
-encoding/pySidecardXmpSync.py=utf-8
+encoding//pysync_image_metadata/pySidecardXmpSync.py=utf-8
+encoding//pysync_image_metadata/pyexiftoolsettags/doc/conf.py=utf-8
+encoding//pysync_image_metadata/pyexiftoolsettags/exiftool.py=utf-8
+encoding//pysync_image_metadata/pyexiftoolsettags/test/test_exiftool.py=utf-8

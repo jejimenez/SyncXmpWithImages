@@ -87,15 +87,17 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process the xmp files of a given path, using them as base to '+
     'get them keywords metadata to be replicated in the jpg, nef files with same name as xmp file in order to '+
     'syncronice the metadata.')
-    
-    parser.add_argument('path', metavar='Path', type=str, nargs='+',
+    #28/12/16 1:05:15,899 a.m. pySidecardXmpSync[3454]: EOFError: EOF when reading a line
+    parser.add_argument('path', metavar='Path', type=str, nargs='?',
                         help='Path to be processed. To process the current path just use . character.')
     parser.add_argument('-r', action = 'store_true',
                     help='recursive processing')
     args = parser.parse_args()
     print(args)
     print(os.getcwd())
-    path = args.path[0]
+    path = args.path
+    if args.path is None:
+        path = raw_input("Please type he path to process. Use . to process the current path or leave it in blank to exit")
     recursive = args.r
     main(path, recursive)
     
