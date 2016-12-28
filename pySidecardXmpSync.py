@@ -17,10 +17,9 @@
 
 from __future__ import unicode_literals
 
-import os, string
+import os,  sys, string, argparse
 
 from pyexiftoolsettags import exiftool
-#from pyexiftool_1 import exiftool
 
 
 MAIN_EXTS = ['xmp','XMP'] # Exts used to identify the file with the metadata which will be copied to the other files
@@ -56,27 +55,24 @@ def main(path, recursive):
         for filename in filter(is_main_file, files):
             print(str('.....................................'))
             print(str(os.path.join(root, filename)))
+            print(os.path.basename(filename).split('.')[0])
             #filefilter = is_related_file(filename, mainfilename, extensions)
             related_files = filter(lambda x: is_related_file(x, os.path.basename(filename).split('.')[0], root), files)
             print(related_files)
             #print(filter(is_related_file, os.path.basename(filename).split('.')[0], files))
             with et:
                 actual_data = et.get_tag("XMP:Subject",os.path.join(root, filename))
-                print(actual_data)
                 if isinstance(actual_data, basestring):
                     actual_data = [actual_data]
                 print(actual_data)
                 #print(os.path.splitext(os.path.basename(filename))[:1])
                 #print(filename.split(".")[-3])
-                print(os.path.basename(filename).split('.')[0])
-                print(related_files)
                 #print(et.set_keywords(exiftool.KW_REPLACE,actual_data,'"'+str(os.path.join(root, os.path.basename(filename).split('.')[0])+".")+'"*'))
                 #print(et.set_keywords(exiftool.KW_REPLACE,actual_data,str(os.path.join(root, os.path.basename(filename).split('.')[0]))))
                 cnt = cnt + len(related_files)
                 if len(related_files) > 0 :
                     print(et.set_keywords_batch(exiftool.KW_REPLACE,actual_data, [os.path.join(root, x) for x in related_files] ) )
                     print(et.get_tag_batch("XMP:Subject",[os.path.join(root, x) for x in related_files]))
-                print("--------------")
         if not recursive:
             break
     print('modified > '+str(cnt)+' files')
@@ -87,9 +83,20 @@ def main(path, recursive):
 # This is where the main app is started
 
 if __name__ == '__main__':
-    path  = '/Users/jaimeenrrique/Documents/workspace/pysync_sidecard_with_imagefile/20_CCSantaFe'
+    
+    parser = argparse.ArgumentParser(description='Process the xmp files of a given path, using them as base to '+
+    'get them keywords metadata to be replicated in the jpg, nef files with same name as xmp file in order to '+
+    'syncronice the metadata.')
+    
+    parser.add_argument('path', metavar='Path', type=str, nargs='+',
+                        help='Path to be processed. To process the current path just use . character.')
+    parser.add_argument('-r', action = 'store_true',
+                    help='recursive processing')
+    args = parser.parse_args()
+    print(args)
+    print(os.getcwd())
+    path = args.path[0]
     recursive = False
-    #exiftool = 'exiftool' #'/usr/local/Cellar/exiftool/10.20/bin/exiftool'
     main(path, recursive)
     
         
