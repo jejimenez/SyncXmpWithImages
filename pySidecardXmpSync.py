@@ -35,8 +35,7 @@ def main(path, recursive):
     et = exiftool.ExifTool("/usr/local/Cellar/exiftool/10.20/bin/exiftool", addedargs=["-overwrite_original"])
     if path is None:
         path = '.'
-    # exiftool  -P -overwrite_original_in_place -ProcessingSoftware='pyExifToolGui 0.6' -xmp:Subject="CasaVieja, Granja, Ciudad, bogota" "/Users/jaimeenrrique/Documents/workspace/pysync_sidecard_with_imagefile/20_CCSantaFe/DSC_0405.JPG"
-
+        
     #with et:
     #    actual_data = et.get_tags(["XMP:Subject"],'/Users/jaimeenrrique/Documents/workspace/pysync_sidecard_with_imagefile/20_CCSantaFe/DSC_0405.NEF.xmp')
     #    print(actual_data)
@@ -74,6 +73,7 @@ def main(path, recursive):
                     print(et.set_keywords_batch(exiftool.KW_REPLACE,actual_data, [os.path.join(root, x) for x in related_files] ) )
                     print(et.get_tag_batch("XMP:Subject",[os.path.join(root, x) for x in related_files]))
         if not recursive:
+            print("Braking. Not recursive.")
             break
     print('modified > '+str(cnt)+' files')
     
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     print(args)
     print(os.getcwd())
     path = args.path[0]
-    recursive = False
+    recursive = args.r
     main(path, recursive)
     
         
