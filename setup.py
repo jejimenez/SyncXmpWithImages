@@ -8,4 +8,7 @@ setup(name='pysync_image_metadata',
       author_email='jimenez.ing.sis@gmail.com',
       license='MIT',
       packages=['pysync_image_metadata'],
-      zip_safe=False)
+      zip_safe=False,
+      entry_points="""
+      [console_scripts]
+      """)

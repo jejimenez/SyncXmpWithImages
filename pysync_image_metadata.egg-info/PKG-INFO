@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: pysync-image-metadata
+Version: 0.1
+Summary: Sync xmp metadata files with related jpg and nef images
+Home-page: https://github.com/jejimenez/SyncXmpWithImages
+Author: Jaime Jimenez
+Author-email: jimenez.ing.sis@gmail.com
+License: MIT
+Description: UNKNOWN
+Platform: UNKNOWN
